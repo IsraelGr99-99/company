@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -23,8 +24,22 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, $request) {
+            //Indicamos cuando quieran buscar un departamento que no exista
+            if($request->is('api/departments/*')){
+                return response()->json([
+                    'status'=> false,
+                    'message'=> 'The selected id is invalid',
+                    //Retornamos error 404 porque es el de no encontrado
+                ],404);
+            }
+            if($request->is('api/employees/*')){
+                return response()->json([
+                    'status'=> false,
+                    'message'=> 'The selected employee is invalid',
+                    //Retornamos error 404 porque es el de no encontrado
+                ],404);
+            }
         });
     }
 }
