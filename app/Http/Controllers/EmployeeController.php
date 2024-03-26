@@ -130,10 +130,10 @@ class EmployeeController extends Controller
      */
     public function EmployeesByDepartment(Request $request){
         //Contamos con la funcion COUNT los empleados por ID y los guardamos como cuenta ademas mostraremos el nombre del departamento
-        $employees = Employee::select(DB::raw('count(employees.id) as count',
-        'departments.name'))
+        $employees = Employee::select(DB::raw('count(employees.id) as count,
+        departments.name'))
         //Lo unimos con la tabla de departamentos
-        ->join('departments','departments.id','=','employees.department_id')
+        ->rightjoin('departments','departments.id','=','employees.department_id')
         //Agrupamos todo con el nombre de departamentos
         ->groupBy('departments.name')->get();
         //Retornamos toda la inf de los empleados en un formato JSON  
